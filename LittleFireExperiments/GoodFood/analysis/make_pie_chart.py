@@ -1,0 +1,65 @@
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# Set modern publication-quality style
+mpl.rcParams['font.family'] = 'sans-serif'
+mpl.rcParams['font.sans-serif'] = ['Arial', 'Helvetica', 'DejaVu Sans', 'Liberation Sans']
+mpl.rcParams['font.size'] = 11
+mpl.rcParams['axes.linewidth'] = 0.8
+mpl.rcParams['axes.spines.top'] = False
+mpl.rcParams['axes.spines.right'] = False
+mpl.rcParams['figure.dpi'] = 300
+mpl.rcParams['figure.facecolor'] = 'white'
+
+# Data
+data = {
+    "Meat: Cooked": 50,
+    "Meat: Raw": 0,
+    "Vegetables: Cooked": 39,
+    "Vegetables: Raw": 11,
+}
+
+# Filter out zero values for cleaner visualization
+filtered_data = {k: v for k, v in data.items() if v > 0}
+labels = list(filtered_data.keys())
+values = list(filtered_data.values())
+
+# Muted red for both cooked (meat and vegetables), other muted for raw vegetables
+colors = ['#E74C3C', '#E74C3C', '#AEB6BF']  # muted red, muted red, muted olive
+
+# Create figure with appropriate aspect ratio
+fig, ax = plt.subplots(figsize=(6, 6), facecolor='white')
+
+# Create pie chart with modern refined styling
+wedges, texts, autotexts = ax.pie(
+    values,
+    labels=labels,
+    autopct='%1.1f%%',
+    startangle=90,
+    colors=colors,
+    textprops={'fontsize': 10.5, 'fontfamily': 'sans-serif'},
+    wedgeprops={'linewidth': 1.0, 'edgecolor': 'white', 'alpha': 0.95},
+    pctdistance=0.82
+)
+
+# Refine percentage text appearance
+for autotext in autotexts:
+    autotext.set_color('white')
+    autotext.set_fontweight('600')
+    autotext.set_fontsize(10.5)
+
+# Refine label text appearance
+for text in texts:
+    text.set_fontsize(11)
+    text.set_fontweight('500')
+
+# Title with modern professional styling
+ax.set_title("Do you prefer to eat [meat/vegetables] cooked or raw?", fontsize=13.5, fontweight='600', pad=18, fontfamily='sans-serif')
+
+# Ensure equal aspect ratio
+ax.axis('equal')
+
+# Save with high resolution
+plt.tight_layout()
+plt.savefig("pie_chart.png", dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.close()
