@@ -1,21 +1,21 @@
-
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
-# Disclaimer: THIS CODE IS NOT EVEN CLOSE TO EFFICIENT
-# The data is small enough I can get away with it, but it's ugly and slow
+import matplotlib.pyplot as plt
 
+averaged_pd_data = pd.read_csv('data/averaged_data.csv')
+averaged_fire_data = pd.read_csv('data/averaged_fire_data.csv')
 
+### Calculate Average Firescores ###
+average_fire_scores = averaged_fire_data.groupby('chunk_number')['averaged_value'].mean()
+print(average_fire_scores)
 
-averaged_data = pd.read_csv("data/averaged_data.csv")
-
-fire_value = pd.read_csv("data/chunk_likefire_score.csv")
 
 pretty_slopes = []
 danger_slopes = []
 
-for user_id in averaged_data["prolific_id"].unique():
-    user_data = averaged_data[averaged_data["prolific_id"] == user_id]
+
+for user_id in averaged_pd_data["prolific_id"].unique():
+    user_data = averaged_pd_data[averaged_pd_data["prolific_id"] == user_id]
 
     user_rating = None
 
@@ -24,7 +24,6 @@ for user_id in averaged_data["prolific_id"].unique():
     fire_values = []
     user_values = []
 
-    # Calculate slope between user-average-score and fire_value for each chunk
     for chunk in range(0, 90):
         chunk_data = user_data[user_data["chunk_number"] == chunk]
         assert len(chunk_data) == 1
@@ -35,21 +34,20 @@ for user_id in averaged_data["prolific_id"].unique():
             user_rating = chunk_data["word_one"].values[0]
 
         user_average_score = chunk_data["averaged_value"].values[0]
-        fire_score = fire_value.iloc[int(chunk)]
+        fire_score = average_fire_scores.iloc[int(chunk)]
 
-        fire_values.append(fire_score.values[0] / 100)
+        fire_values.append(fire_score)
         user_values.append(user_average_score)
-
+    
     slope, intercept = np.polyfit(fire_values, user_values, 1)
 
     print(f"\nSlope: {slope}, Intercept: {intercept}")
-
     print(user_rating)
 
-    if user_rating == "Pretty":
-        pretty_slopes.append(slope)
-    elif user_rating == "Dangerous":
+    if user_rating == "Dangerous":
         danger_slopes.append(slope)
+    elif user_rating == "Pretty":
+        pretty_slopes.append(slope)
 
 print(len(pretty_slopes))
 print(len(danger_slopes))
@@ -58,7 +56,7 @@ BINS = 15
 
 plt.figure(figsize=(12, 6))
 plt.hist(pretty_slopes, bins=BINS, alpha=0.8, label='Pretty Slopes', color='blue')
-plt.xlim(-0.6, 0.6)
+plt.xlim(-1.5, 1.5)
 plt.xlabel('Slope Value')
 plt.ylabel('Frequency')
 plt.title('Distribution of Slopes for Pretty Ratings')
@@ -67,11 +65,11 @@ plt.legend()
 plt.savefig('outputs/pretty_slope_distribution.png')
 
 plt.figure(figsize=(12, 6))
-plt.xlim(-0.6, 0.6)
+plt.xlim(-1.5, 1.5)
 plt.hist(danger_slopes, bins=BINS, alpha=0.8, label='Dangerous Slopes', color='red')
 plt.xlabel('Slope Value')
 plt.ylabel('Frequency')
 plt.title('Distribution of Slopes for Dangerous Ratings')
 plt.legend()
 
-plt.savefig('outputs/danger_slope_distribution.png')
+plt.savefig('outputs/dangerous_slope_distribution.png')

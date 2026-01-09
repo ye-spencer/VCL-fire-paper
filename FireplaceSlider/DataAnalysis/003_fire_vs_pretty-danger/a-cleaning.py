@@ -56,10 +56,10 @@ for col in ['session_id', 'x', 'y', 'word_one', 'word_two']:
     else:
         print(f"All prolific_ids have consistent {col} values")
 
-### Swap word_one and word_two to be in alphabetical order, and invert the value ###
-mask = df['word_one'] > df['word_two']
-df.loc[mask, ['word_one', 'word_two']] = df.loc[mask, ['word_two', 'word_one']].values
-df.loc[mask, ['value']] = df.loc[mask, ['value']].apply(lambda x: 100 - x)
+### Swap word_one and word_two to be in alphabetical order, and invert the value ### Fire already in right order
+# mask = df['word_one'] > df['word_two']
+# df.loc[mask, ['word_one', 'word_two']] = df.loc[mask, ['word_two', 'word_one']].values
+# df.loc[mask, ['value']] = df.loc[mask, ['value']].apply(lambda x: 100 - x)
 
 ### Save the cleaned dataframe to a new CSV file ###
 df.to_csv('data/cleaned_fire_data.csv', index=False)
