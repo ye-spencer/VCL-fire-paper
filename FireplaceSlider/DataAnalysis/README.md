@@ -6,6 +6,10 @@ These folders are various data analysis files for the fireplace slider project. 
 
 ## Usage
 
-Each folder has `.py` files that start with a letter, run these in alphabetical order.
+Each folder has `.py` files that start with a letter, run these in alphabetical order. 
+
+Occasionally, some files with multiple versions (like flicker measurement) will have multiple under the same alphabetical letter (like a1, a2, a3, etc.). In this case, run them in numerical order if they can be run, else skip.
+
+## File Naming Convention
 
 I started with numbers, but that was a bad idea, as it prevent importing between files.
